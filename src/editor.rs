@@ -10,7 +10,7 @@ pub struct Editor {
 impl Editor {
     pub fn run(&mut self) {
         loop {
-            if let Err(error) = self.process_screen() {
+            if let Err(error) = self.refush_screen() {
                 die(&error)
             }
             if self.should_quit {
@@ -38,7 +38,8 @@ impl Editor {
         Ok(())
     }
 
-    fn process_screen(&self) -> Result<(), std::io::Error> {
+    fn refush_screen(&self) -> Result<(), std::io::Error> {
+        Terminal::cursor_hide();
         Terminal::clear_screen();
         Terminal::cursor_position(0, 0);
         if self.should_quit {
@@ -47,11 +48,12 @@ impl Editor {
             self.draw_rows();
             Terminal::cursor_position(0, 0); //清屏后光标移动到终端(1,1)的坐标
         }
+        Terminal::cursor_show();
         Terminal::flush()
     }
 
     fn draw_rows(&self) {
-        for _ in 0..self.terminal.size().height {
+        for _ in 0..self.terminal.size().height - 1 {
             println!("~\r");
         }
     }
