@@ -1,4 +1,4 @@
-use std::io::{self, stdout};
+use std::io::{self, stdout, Write};
 use termion::event::Key;
 use termion::input::TermRead;
 use termion::raw::IntoRawMode;
@@ -11,11 +11,14 @@ impl Editor {
     pub fn run(&mut self) {
         let _stdout = stdout().into_raw_mode().unwrap();
         loop {
-            if let Err(error) = self.process_keypress() {
+            if let Err(error) = self.process_screen() {
                 die(&error)
             }
             if self.should_quit {
                 break;
+            }
+            if let Err(error) = self.process_keypress() {
+                die(&error)
             }
         }
     }
@@ -31,6 +34,13 @@ impl Editor {
             _ => (),
         }
         Ok(())
+    }
+
+    fn process_screen(&self) -> Result<(), std::io::Error> {
+        //print!("\x1b[2j"); x1b 是十进制27 键盘的Escape按键
+        //等同于上面的语句，termion已经实现了清屏的功能
+        print!("{}", termion::clear::All);
+        io::stdout().flush()
     }
 }
 
