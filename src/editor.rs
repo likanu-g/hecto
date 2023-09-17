@@ -39,7 +39,10 @@ impl Editor {
     fn process_screen(&self) -> Result<(), std::io::Error> {
         //print!("\x1b[2j"); x1b 是十进制27 键盘的Escape按键
         //等同于上面的语句，termion已经实现了清屏的功能
-        print!("{}", termion::clear::All);
+        print!("{} {}", termion::clear::All, termion::cursor::Goto(1, 1)); //清屏后光标移动到终端(1,1)的坐标
+        if self.should_quit {
+            println!("Good bye. \r")
+        }
         io::stdout().flush()
     }
 }
@@ -53,5 +56,6 @@ fn read_key() -> Result<Key, std::io::Error> {
 }
 
 fn die(e: &std::io::Error) {
+    print!("{}", termion::clear::All);
     panic!("{}", e);
 }
