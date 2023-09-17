@@ -3,6 +3,7 @@ use std::io::{self, stdout, Read};
 use termion::raw::IntoRawMode;
 
 fn main() {
+    // 下划线变量名会让编译器忽略这个变量没有使用的警告
     let _stdout = stdout().into_raw_mode().unwrap();
 
     for b in io::stdin().bytes() {
