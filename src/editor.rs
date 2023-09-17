@@ -42,8 +42,17 @@ impl Editor {
         print!("{} {}", termion::clear::All, termion::cursor::Goto(1, 1)); //清屏后光标移动到终端(1,1)的坐标
         if self.should_quit {
             println!("Good bye. \r")
+        } else {
+            self.draw_rows();
+            print!("{}", termion::cursor::Goto(1, 1)); //清屏后光标移动到终端(1,1)的坐标
         }
         io::stdout().flush()
+    }
+
+    fn draw_rows(&self) {
+        for _ in 0..24 {
+            println!("~\r");
+        }
     }
 }
 
