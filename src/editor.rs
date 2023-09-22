@@ -136,7 +136,10 @@ impl Editor {
             }
             Key::Right => {
                 if x < width {
-                    x = x.saturating_add(1);
+                    x += 1;
+                } else if y < height {
+                    y += 1;
+                    x = 0;
                 }
             }
             Key::PageUp => y = 0,
